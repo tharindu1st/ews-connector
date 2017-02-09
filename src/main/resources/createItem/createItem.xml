@@ -1,0 +1,126 @@
+<!--
+   Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+
+   WSO2 Inc. licenses this file to you under the Apache License,
+   Version 2.0 (the "License"); you may not use this file except
+   in compliance with the License.
+   You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied. See the License for the
+   specific language governing permissions and limitations
+   under the License.
+-->
+<template name="createItem" onError="fault" xmlns="http://ws.apache.org/ns/synapse">
+    <!-- Header Elements Start-->
+    <parameter name="timeZoneDefinition"/>
+    <parameter name="periods"/>
+    <parameter name="transitionsGroups"/>
+    <parameter name="transitions"/>
+    <parameter name="requestServerVersion"/>
+    <parameter name="mailboxCulture"/>
+    <parameter name="principalName"/>
+    <parameter name="sid"/>
+    <parameter name="primarySmtpAddress"/>
+    <parameter name="smtpAddress"/>
+    <!-- Header Elements END-->
+    <!--Start of Body-->
+    <parameter name="messageDisposition"/>
+    <parameter name="sendMeetingInvitations"/>
+    <parameter name="folderId"/>
+    <parameter name="distinguishedFolderId"/>
+    <parameter name="mailbox"/>
+    <parameter name="addressListId"/>
+    <parameter name="mimeContent"/>
+    <parameter name="itemId"/>
+    <parameter name="parentFolderId"/>
+    <parameter name="itemClass"/>
+    <parameter name="subject"/>
+    <parameter name="sensitivity"/>
+    <parameter name="body"/>
+    <parameter name="attachments"/>
+    <parameter name="dateTimeReceived"/>
+    <parameter name="size"/>
+    <parameter name="categories"/>
+    <parameter name="importance"/>
+    <parameter name="inReplyTo"/>
+    <parameter name="isSubmitted"/>
+    <parameter name="isDraft"/>
+    <parameter name="isFromMe"/>
+    <parameter name="isResend"/>
+    <parameter name="isUnmodified"/>
+    <parameter name="internetMessageHeaders"/>
+    <parameter name="dateTimeSent"/>
+    <parameter name="dateTimeCreated"/>
+    <parameter name="responseObjects"/>
+    <parameter name="reminderDueBy"/>
+    <parameter name="reminderIsSet"/>
+    <parameter name="reminderNextTime"/>
+    <parameter name="reminderMinutesBeforeStart"/>
+    <parameter name="displayCc"/>
+    <parameter name="displayTo"/>
+    <parameter name="hasAttachments"/>
+    <parameter name="extendedProperty"/>
+    <parameter name="culture"/>
+    <parameter name="effectiveRights"/>
+    <parameter name="lastModifiedName"/>
+    <parameter name="lastModifiedTime"/>
+    <parameter name="isAssociated"/>
+    <parameter name="webClientReadFormQueryString"/>
+    <parameter name="webClientEditFormQueryString"/>
+    <parameter name="conversationId"/>
+    <parameter name="uniqueBody"/>
+    <parameter name="flag"/>
+    <parameter name="storeEntryId"/>
+    <parameter name="instanceKey"/>
+    <parameter name="normalizedBody"/>
+    <parameter name="entityExtractionResult"/>
+    <parameter name="policyTag"/>
+    <parameter name="archiveTag"/>
+    <parameter name="retentionDate"/>
+    <parameter name="preview"/>
+    <parameter name="rightsManagementLicenseData"/>
+    <parameter name="predictedActionReasons"/>
+    <parameter name="isClutter"/>
+    <parameter name="blockStatus"/>
+    <parameter name="hasBlockedImages"/>
+    <parameter name="textBody"/>
+    <parameter name="iconIndex"/>
+    <parameter name="sender"/>
+    <parameter name="toRecipients"/>
+    <parameter name="ccRecipients"/>
+    <parameter name="bccRecipients"/>
+    <parameter name="isReadReceiptRequested"/>
+    <parameter name="isDeliveryReceiptRequested"/>
+    <parameter name="conversationIndex"/>
+    <parameter name="conversationTopic"/>
+    <parameter name="from"/>
+    <parameter name="internetMessageId"/>
+    <parameter name="isRead"/>
+    <parameter name="isResponseRequested"/>
+    <parameter name="references"/>
+    <parameter name="replyTo"/>
+    <parameter name="receivedBy"/>
+    <parameter name="receivedRepresenting"/>
+    <parameter name="approvalRequestData"/>
+    <parameter name="votingInformation"/>
+    <parameter name="reminderMessageData"/>
+    <!--End of Body-->
+    <sequence>
+        <class name="org.wso2.carbon.connector.CreateItemMediator"/>
+        <header name="To" expression="$ctx:uri.var.ews.apiUrl"/>
+        <header name="Action" value="http://schemas.microsoft.com/exchange/services/2006/messages/CreateItem"/>
+        <property name="messageType" scope="axis2" value="text/xml"/>
+        <property name="DISABLE_CHUNKING" value="true" scope="axis2"/>
+        <property name="FORCE_ERROR_ON_SOAP_FAULT" value="true"/>
+        <call>
+            <endpoint>
+                <default format="soap11"/>
+            </endpoint>
+        </call>
+    </sequence>
+</template>
