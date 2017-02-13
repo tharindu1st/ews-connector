@@ -16,11 +16,11 @@
    specific language governing permissions and limitations
    under the License.
 -->
-<component name="createItem" type="synapse/template" >
+<component name="createAttachment" type="synapse/template" >
     <subComponents>
-        <component name="createItem" >
-            <file>createItem.xml</file>
-            <description>Create Item operation</description>
+        <component name="createAttachment" >
+            <file>createAttachment.xml</file>
+            <description>Create Attachment operation</description>
         </component>
     </subComponents>
 </component>

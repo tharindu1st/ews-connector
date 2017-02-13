@@ -21,6 +21,7 @@
         <dependency component="config" />
         <dependency component="getItem" />
         <dependency component="getAttachment" />
+        <dependency component="createAttachment" />
         <dependency component="sendItem" />
         <dependency component="createItem" />
         <dependency component="findItem" />

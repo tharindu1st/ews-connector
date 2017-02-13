@@ -37,21 +37,23 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayOutputStream;
 
-public class EWSUtils {
-    public static final String XSLT_FILE_LOCATION = "xslt/namespace.xslt";
-    public static SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
+class EWSUtils {
+    private static final String XSLT_FILE_LOCATION = "xslt/namespace.xslt";
+    private static SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
     static OMNamespace type = soapFactory.createOMNamespace(EWSConstants.TYPE_NAME_SPACE, EWSConstants
             .TYPE_NAME_SPACE_HEADER);
     static OMNamespace message = soapFactory.createOMNamespace(EWSConstants.MESSAGES_NAME_SPACE, EWSConstants
             .MESSAGE_NAME_SPACE_HEADER);
 
     /**
+     * used to Create OmAttribute and set value
+     *
      * @param messageContext
      * @param rootElement
      * @param templateParameter
      * @param attributeKey
      */
-    public static boolean setValueToXMLAttribute(MessageContext messageContext, OMElement rootElement, String
+    static boolean setValueToXMLAttribute(MessageContext messageContext, OMElement rootElement, String
             templateParameter, String attributeKey) {
         String value = (String) ConnectorUtils.lookupTemplateParamater(messageContext, templateParameter);
         if (!StringUtils.isEmpty(value)) {
@@ -61,7 +63,16 @@ public class EWSUtils {
         return false;
     }
 
-    public static void populateDirectElements(MessageContext messageContext, OMElement baseElement, String
+    /**
+     * Used to populate complex Elements with name spaces
+     *
+     * @param messageContext
+     * @param baseElement
+     * @param parameterName
+     * @throws XMLStreamException
+     * @throws TransformerException
+     */
+    static void populateDirectElements(MessageContext messageContext, OMElement baseElement, String
             parameterName) throws XMLStreamException, TransformerException {
         String parametrisedValue = (String) ConnectorUtils.lookupTemplateParamater(messageContext, parameterName);
         if (!StringUtils.isEmpty(parametrisedValue)) {
@@ -70,7 +81,17 @@ public class EWSUtils {
         }
     }
 
-    public static void populateDirectElements(MessageContext messageContext, OMElement baseElement, String
+    /**
+     * Used to populate complex Elements with name spaces
+     *
+     * @param messageContext
+     * @param baseElement
+     * @param parameterName
+     * @param rootNameSpace
+     * @throws XMLStreamException
+     * @throws TransformerException
+     */
+    static void populateDirectElements(MessageContext messageContext, OMElement baseElement, String
             parameterName, OMNamespace rootNameSpace) throws XMLStreamException, TransformerException {
         String parametrisedValue = (String) ConnectorUtils.lookupTemplateParamater(messageContext, parameterName);
         if (!StringUtils.isEmpty(parametrisedValue)) {
@@ -81,7 +102,15 @@ public class EWSUtils {
         }
     }
 
-    public static void populateTimeZoneDefinitionHeader(MessageContext messageContext, OMElement
+    /**
+     * Used to populate <TimeZoneDefinition><TimeZoneDefinition/> element
+     *
+     * @param messageContext
+     * @param timeZoneContextHeader
+     * @throws XMLStreamException
+     * @throws TransformerException
+     */
+    private static void populateTimeZoneDefinitionHeader(MessageContext messageContext, OMElement
             timeZoneContextHeader) throws XMLStreamException, TransformerException {
         String timeZoneDefinitionObject = (String) ConnectorUtils.lookupTemplateParamater(messageContext,
                 EWSConstants.TIME_ZONE_DEFINITION);
@@ -109,9 +138,14 @@ public class EWSUtils {
         }
     }
 
-    public static void populateExchangeImpersonation(OMElement exchangeImpersonationSoapHeaderBlock,
-                                                     MessageContext
-                                                             messageContext) {
+    /**
+     * used to populate <ExchangeImpersonation><ExchangeImpersonation/> element
+     *
+     * @param exchangeImpersonationSoapHeaderBlock
+     * @param messageContext
+     */
+    private static void populateExchangeImpersonation(OMElement exchangeImpersonationSoapHeaderBlock,
+                                                      MessageContext messageContext) {
         OMElement connectingSidOmElement = soapFactory.createOMElement(EWSConstants.CONNECTING_SID, type);
         setValueToXMLElement(messageContext, EWSConstants.PRINCIPAL_NAME, connectingSidOmElement, EWSConstants
                 .PRINCIPAL_NAME_ELEMENT);
@@ -125,6 +159,14 @@ public class EWSUtils {
         }
     }
 
+    /**
+     * Used to set OmElement value from connector configuration
+     *
+     * @param messageContext
+     * @param templateParameter
+     * @param baseElement
+     * @param elementName
+     */
     public static void setValueToXMLElement(MessageContext messageContext, String templateParameter, OMElement
             baseElement, String elementName) {
         OMElement rootElement = soapFactory.createOMElement(elementName, type);
@@ -135,7 +177,14 @@ public class EWSUtils {
         }
     }
 
-    public static boolean setValueToXMLElement(MessageContext messageContext, OMElement rootElement, String
+    /**
+     * Used to set OmElement value from connector configuration
+     *
+     * @param messageContext
+     * @param templateParameter
+     * @param rootElement
+     */
+    private static boolean setValueToXMLElement(MessageContext messageContext, OMElement rootElement, String
             templateParameter) {
         String value = (String) ConnectorUtils.lookupTemplateParamater(messageContext, templateParameter);
         if (!StringUtils.isEmpty(value)) {
@@ -145,7 +194,15 @@ public class EWSUtils {
         return false;
     }
 
-    public static OMElement setNameSpaceForElements(OMElement element) throws TransformerException, XMLStreamException {
+    /**
+     * used to set namespace to Elements.
+     *
+     * @param element
+     * @return
+     * @throws TransformerException
+     * @throws XMLStreamException
+     */
+    static OMElement setNameSpaceForElements(OMElement element) throws TransformerException, XMLStreamException {
         Source xmlSource = new OMSource(element);
         StreamSource xsltSource = new StreamSource(EWSUtils.class.getClassLoader().getResourceAsStream
                 (XSLT_FILE_LOCATION));
@@ -157,7 +214,15 @@ public class EWSUtils {
         return AXIOMUtil.stringToOM(new String(output.toByteArray()));
     }
 
-    public static OMElement populateItemIds(MessageContext messageContext) throws XMLStreamException,
+    /**
+     * used to populate <ItemIds></ItemIds> element
+     *
+     * @param messageContext
+     * @return
+     * @throws XMLStreamException
+     * @throws TransformerException
+     */
+    static OMElement populateItemIds(MessageContext messageContext) throws XMLStreamException,
             TransformerException {
         OMElement itemIdsElement = soapFactory.createOMElement(EWSConstants.ITEM_IDS, message);
         OMElement itemIdElement = AXIOMUtil.stringToOM((String) ConnectorUtils.lookupTemplateParamater
@@ -230,7 +295,16 @@ public class EWSUtils {
         return itemIdsElement;
     }
 
-    public static boolean populateSaveItemFolderIdElement(MessageContext messageContext, OMElement baseElement) throws
+    /**
+     * used to populate <SavedItemFolderId></SavedItemFolderId> element
+     *
+     * @param messageContext
+     * @param baseElement
+     * @return
+     * @throws XMLStreamException
+     * @throws TransformerException
+     */
+    static boolean populateSaveItemFolderIdElement(MessageContext messageContext, OMElement baseElement) throws
             XMLStreamException, TransformerException {
         String folderIdString = (String) ConnectorUtils.lookupTemplateParamater(messageContext, EWSConstants.FOLDER_ID);
         if (!StringUtils.isEmpty(folderIdString)) {
@@ -264,15 +338,31 @@ public class EWSUtils {
             }
         }
         EWSUtils.populateDirectElements(messageContext, distinguishedFolderIdOmElement, EWSConstants.MAIL_BOX);
-        baseElement.addChild(distinguishedFolderIdOmElement);
+        if (distinguishedFolderIdOmElement.getChildElements().hasNext() && distinguishedFolderIdOmElement
+                .getAllAttributes().hasNext()) {
+            baseElement.addChild(distinguishedFolderIdOmElement);
+        }
         OMElement addressListIdElement = soapFactory.createOMElement(EWSConstants.ADDRESS_LIST_ID_ELEMENT, type);
         EWSUtils.setValueToXMLAttribute(messageContext, addressListIdElement, EWSConstants.ADDRESS_LIST_ID, EWSConstants
                 .ID_ATTRIBUTE);
-        baseElement.addChild(addressListIdElement);
-        return true;
+        if (addressListIdElement.getAllAttributes().hasNext()){
+            baseElement.addChild(addressListIdElement);
+        }
+        if (baseElement.getChildElements().hasNext()){
+            return true;
+        }
+        return false;
     }
 
-    public static OMElement populateItemShape(MessageContext messageContext) throws XMLStreamException,
+    /**
+     * used to populate <ItemShape></ItemShape> element
+     *
+     * @param messageContext
+     * @return
+     * @throws XMLStreamException
+     * @throws TransformerException
+     */
+    static OMElement populateItemShape(MessageContext messageContext) throws XMLStreamException,
             TransformerException {
         OMElement itemShapeElement = soapFactory.createOMElement(EWSConstants.ITEM_SHAPE, message);
         setValueToXMLElement(messageContext, EWSConstants.BASE_SHAPE, itemShapeElement, EWSConstants
@@ -303,7 +393,15 @@ public class EWSUtils {
         return itemShapeElement;
     }
 
-    public static void populateManagementRolesHeader(OMElement soapHeader, MessageContext messageContext) throws
+    /**
+     * used to populate <ManagementRole></ManagementRole> element
+     *
+     * @param soapHeader
+     * @param messageContext
+     * @throws TransformerException
+     * @throws XMLStreamException
+     */
+    static void populateManagementRolesHeader(OMElement soapHeader, MessageContext messageContext) throws
             TransformerException, XMLStreamException {
         OMElement managementRoleHeader = soapFactory.createOMElement(EWSConstants.MANAGEMENT_ROLES_HEADER, type);
         EWSUtils.populateDirectElements(messageContext, managementRoleHeader, EWSConstants.USER_ROLES);
@@ -313,7 +411,13 @@ public class EWSUtils {
         }
     }
 
-    public static void populateDateTimePrecisionHeader(OMElement soapHeader, MessageContext messageContext) {
+    /**
+     * used to populate <DateTimePrecision></DateTimePrecision> element
+     *
+     * @param soapHeader
+     * @param messageContext
+     */
+    static void populateDateTimePrecisionHeader(OMElement soapHeader, MessageContext messageContext) {
         OMElement dateTmePrecisionHeader = soapFactory.createOMElement(EWSConstants.DATE_TIME_PRECISION_HEADER, type);
         String dateTimePrecision = (String) ConnectorUtils.lookupTemplateParamater(messageContext, EWSConstants
                 .DATE_TIME_PRECISION);
@@ -323,7 +427,15 @@ public class EWSUtils {
         }
     }
 
-    public static void populateTimeZoneContextHeader(OMElement soapHeader, MessageContext messageContext) throws
+    /**
+     * used to populate <TimeZoneContext></TimeZoneContext> element
+     *
+     * @param soapHeader
+     * @param messageContext
+     * @throws TransformerException
+     * @throws XMLStreamException
+     */
+    static void populateTimeZoneContextHeader(OMElement soapHeader, MessageContext messageContext) throws
             TransformerException, XMLStreamException {
         OMElement timeZoneContextHeader = soapFactory.createOMElement(EWSConstants.TIME_ZONE_CONTEXT_HEADER, type);
         populateTimeZoneDefinitionHeader(messageContext, timeZoneContextHeader);
@@ -332,7 +444,15 @@ public class EWSUtils {
         }
     }
 
-    public static void populateRequestedServerVersionHeader(OMElement soapHeader, MessageContext messageContext) throws
+    /**
+     * used to populate <RequestServerVersion></RequestServerVersion> element
+     *
+     * @param soapHeader
+     * @param messageContext
+     * @throws TransformerException
+     * @throws XMLStreamException
+     */
+    static void populateRequestedServerVersionHeader(OMElement soapHeader, MessageContext messageContext) throws
             TransformerException, XMLStreamException {
         OMElement requestedServerVersionHeader = soapFactory.createOMElement(EWSConstants
                 .REQUESTED_SERVER_VERSION_HEADER, type);
@@ -342,14 +462,26 @@ public class EWSUtils {
         }
     }
 
-    public static void populateMailboxCulture(OMElement soapHeader, MessageContext messageContext) {
+    /**
+     * used to populate <MailBoxCulture></MailBoxCulture> element
+     *
+     * @param soapHeader
+     * @param messageContext
+     */
+    static void populateMailboxCulture(OMElement soapHeader, MessageContext messageContext) {
         OMElement mailBoxCultureHeader = soapFactory.createOMElement(EWSConstants.MAIL_BOX_CULTURE_HEADER, type);
         if (setValueToXMLElement(messageContext, mailBoxCultureHeader, EWSConstants.MAIL_BOX_CULTURE)) {
             soapHeader.addChild(mailBoxCultureHeader);
         }
     }
 
-    public static void populateExchangeImpersonationHeader(OMElement soapHeader, MessageContext messageContext) {
+    /**
+     * used to populate <ExchangeImpersonationHeader></ExchangeImpersonationHeader> element
+     *
+     * @param soapHeader
+     * @param messageContext
+     */
+    static void populateExchangeImpersonationHeader(OMElement soapHeader, MessageContext messageContext) {
         OMElement exchangeImpersonationSoapHeaderBlock = soapFactory.createOMElement(EWSConstants
                 .EXCHANGE_IMPERSONATION_HEADER, type);
         EWSUtils.populateExchangeImpersonation(exchangeImpersonationSoapHeaderBlock, messageContext);

@@ -167,6 +167,9 @@ public class EWSConstants {
     public static final String BODY_ELEMENT = "Body";
     public static final String BODY_TYPE_ATTRIBUTE = "BodyType";
     public static final String CONTENT = "Content";
+    public static final String CREATE_ATTACHMENT_ELEMENT = "CreateAttachment";
+    public static final String PARENT_ITEM_ID_ELEMENT = "ParentItemId";
+    public static final String PARENT_ITEM_ID = "parentItemId";
 
     public static String DATE_TIME_PRECISION = "dateTimePrecision";
     public static final String DATE_TIME_PRECISION_HEADER = "DateTimePrecision";
