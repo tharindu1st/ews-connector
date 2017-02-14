@@ -17,13 +17,16 @@
    under the License.
 -->
 <template name="config" onError="fault" xmlns="http://ws.apache.org/ns/synapse">
-	<parameter name="endpointUrl" />
-	<parameter name="username" />
-	<parameter name="password" />
+	<parameter name="endpointUrl" description="Endpoint Url of the Exchange Server Endpoint"/>
+	<parameter name="username" description="Exchange server UserName"/>
+	<parameter name="password" description="Exchange server Password"/>
+	<parameter name="blocking"
+			   description="The blocking parameter, which helps the connector to perform the blocking invocations to EWS"/>
 	<sequence>
+		<property name="EWS_BLOCKING" expression="$func:blocking"/>
 		<property name="uri.var.ews.apiUrl" expression="$func:endpointUrl" scope="default" type="STRING"/>
-		<property name="Authorization"
+		<property name="EWS_AUTHORIZATION_HEADER"
 				  expression="fn:concat('Basic ', base64Encode(fn:concat($func:username, ':', $func:password)))"
-				  scope="transport"/>
+				  scope="default"/>
 	</sequence>
 </template>

@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -36,11 +36,13 @@ import org.wso2.carbon.utils.xml.StringUtils;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 
-
+/**
+ * Class used to generate GetAttachment Operation Soap Request
+ */
 public class GetAttachmentMediator extends AbstractConnector {
-    OMNamespace type = EWSUtils.type;
-    OMNamespace message = EWSUtils.message;
-    SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
+    private OMNamespace type = EWSUtils.type;
+    private OMNamespace message = EWSUtils.message;
+    private SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
 
     public void connect(MessageContext messageContext) throws ConnectException {
         SOAPEnvelope soapEnvelope = soapFactory.createSOAPEnvelope();
@@ -67,6 +69,13 @@ public class GetAttachmentMediator extends AbstractConnector {
 
     }
 
+    /**
+     * Used to populate soap headers
+     * @param messageContext message context of request
+     * @return Soap Header
+     * @throws XMLStreamException
+     * @throws TransformerException throws when
+     */
     private SOAPHeader populateSoapHeader(MessageContext messageContext) throws XMLStreamException,
             TransformerException {
         SOAPHeader soapHeader = soapFactory.createSOAPHeader();
@@ -77,7 +86,13 @@ public class GetAttachmentMediator extends AbstractConnector {
         return soapHeader;
     }
 
-
+    /**
+     * Used to populate soap body
+     * @param messageContext message context of request
+     * @return Soap Body
+     * @throws XMLStreamException
+     * @throws TransformerException when transformation couldn't be done
+     */
     private SOAPBody populateBody(MessageContext messageContext) throws XMLStreamException, TransformerException {
         SOAPBody soapBody = soapFactory.createSOAPBody();
         OMElement getAttachmentOmElement = soapFactory.createOMElement(EWSConstants.GET_ATTACHMENTS, message);
@@ -94,6 +109,13 @@ public class GetAttachmentMediator extends AbstractConnector {
         return soapBody;
     }
 
+    /**
+     * Used to populate AttachmentScope Element
+     * @param messageContext message context of request
+     * @param baseElement baseElement of attachmentShape
+     * @throws XMLStreamException
+     * @throws TransformerException when transformation couldn't be done
+     */
     private void populateAttachmentShape(MessageContext messageContext, OMElement baseElement) throws
             XMLStreamException, TransformerException {
         EWSUtils.setValueToXMLElement(messageContext, EWSConstants.INCLUDE_MIME_CONTENT, baseElement, EWSConstants

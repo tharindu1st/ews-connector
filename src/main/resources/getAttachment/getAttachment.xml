@@ -1,5 +1,5 @@
 <!--
-   Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+   Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
    WSO2 Inc. licenses this file to you under the Apache License,
    Version 2.0 (the "License"); you may not use this file except
@@ -17,23 +17,23 @@
 -->
 <template name="getAttachment" onError="fault" xmlns="http://ws.apache.org/ns/synapse">
     <!-- Header Elements Start-->
-    <parameter name="timeZoneDefinition"/>
-    <parameter name="periods"/>
-    <parameter name="transitionsGroups"/>
-    <parameter name="transitions"/>
-    <parameter name="requestServerVersion"/>
-    <parameter name="mailboxCulture"/>
-    <parameter name="principalName"/>
-    <parameter name="sid"/>
-    <parameter name="primarySmtpAddress"/>
-    <parameter name="smtpAddress"/>
-    <!-- Header Elements END-->
+    <parameter name="timeZoneDefinition" description="TimeZoneDefinition Element"/>
+    <parameter name="periods" description="Periods element"/>
+    <parameter name="transitionsGroups" description="Transition Groups"/>
+    <parameter name="transitions" description="Transitions"/>
+    <parameter name="requestServerVersion" description="Server version of EWS Endpoint"/>
+    <parameter name="mailboxCulture" description="culture to use when opening a mailbox"/>
+    <parameter name="principalName" description="user principal Name for Exchange Impersonation"/>
+    <parameter name="sid" description="security identifier for account to use"/>
+    <parameter name="primarySmtpAddress" description="primary email address for delegation"/>
+    <parameter name="smtpAddress" description="email address for impersonation"/>
+        <!-- Header Elements END-->
     <!--Start of Body-->
-    <parameter name="includeMimeContent"/>
-    <parameter name="bodyType"/>
-    <parameter name="filterHtmlContent"/>
-    <parameter name="additionalProperties"/>
-    <parameter name="attachmentId"/>
+    <parameter name="includeMimeContent" description="Content of attachment return with response"/>
+    <parameter name="bodyType" description="type of body content "/>
+    <parameter name="filterHtmlContent" description="html content will retrieve in response"/>
+    <parameter name="additionalProperties" description="attributes to be written in the Attachment"/>
+    <parameter name="attachmentId" description="Unique Id of Attachment"/>
     <!--End of Body-->
     <sequence>
         <class name="org.wso2.carbon.connector.GetAttachmentMediator"/>
@@ -42,10 +42,42 @@
         <property name="messageType" scope="axis2" value="text/xml"/>
         <property name="DISABLE_CHUNKING" value="true" scope="axis2"/>
         <property name="FORCE_ERROR_ON_SOAP_FAULT" value="true"/>
-        <call>
-            <endpoint>
-                <default format="soap11"/>
-            </endpoint>
-        </call>
+        <property name="Authorization" expression="$ctx:EWS_AUTHORIZATION_HEADER" scope="transport"/>
+        <filter source="$ctx:EWS_BLOCKING" regex="true">
+            <then>
+                <call blocking="true">
+                    <endpoint>
+                        <default format="soap11">
+                            <timeout>
+                                <duration>60000</duration>
+                                <responseAction>fault</responseAction>
+                            </timeout>
+                            <suspendOnFailure>
+                                <initialDuration>2000</initialDuration>
+                                <progressionFactor>1.0</progressionFactor>
+                                <maximumDuration>3000</maximumDuration>
+                            </suspendOnFailure>
+                        </default>
+                    </endpoint>
+                </call>
+            </then>
+            <else>
+                <call>
+                    <endpoint>
+                        <default format="soap11">
+                            <timeout>
+                                <duration>60000</duration>
+                                <responseAction>fault</responseAction>
+                            </timeout>
+                            <suspendOnFailure>
+                                <initialDuration>2000</initialDuration>
+                                <progressionFactor>1.0</progressionFactor>
+                                <maximumDuration>3000</maximumDuration>
+                            </suspendOnFailure>
+                        </default>
+                    </endpoint>
+                </call>
+            </else>
+        </filter>
     </sequence>
 </template>

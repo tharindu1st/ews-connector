@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -36,7 +36,9 @@ import javax.xml.transform.TransformerException;
 import static org.wso2.carbon.connector.EWSUtils.populateItemIds;
 import static org.wso2.carbon.connector.EWSUtils.populateItemShape;
 
-
+/**
+ * This class used to generate GetItem Operation SOAP request
+ */
 public class GetItemMediator extends AbstractConnector {
     OMNamespace type = EWSUtils.type;
     OMNamespace message = EWSUtils.message;
@@ -66,6 +68,13 @@ public class GetItemMediator extends AbstractConnector {
 
     }
 
+    /**
+     * Used to populate soap headers
+     * @param messageContext message context of request
+     * @return Soap Header
+     * @throws XMLStreamException
+     * @throws TransformerException throws when
+     */
     private SOAPHeader populateSoapHeader(MessageContext messageContext) throws XMLStreamException,
             TransformerException {
         SOAPHeader soapHeader = soapFactory.createSOAPHeader();
@@ -78,7 +87,13 @@ public class GetItemMediator extends AbstractConnector {
         return soapHeader;
     }
 
-
+    /**
+     * Used to populate soap Body
+     * @param messageContext message context of request
+     * @return Soap Body
+     * @throws XMLStreamException
+     * @throws TransformerException throws when
+     */
     private SOAPBody populateBody(MessageContext messageContext) throws XMLStreamException, TransformerException {
         SOAPBody soapBody = soapFactory.createSOAPBody();
         OMElement getItemElement = soapFactory.createOMElement(EWSConstants.GET_ITEM_ELEMENT, message);

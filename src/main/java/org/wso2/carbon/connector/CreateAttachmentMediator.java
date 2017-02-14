@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -37,7 +37,9 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 
-
+/**
+ * Class used to Create CreateAttachment Soap Request
+ */
 public class CreateAttachmentMediator extends AbstractConnector {
     OMNamespace type = EWSUtils.type;
     OMNamespace message = EWSUtils.message;
@@ -51,7 +53,6 @@ public class CreateAttachmentMediator extends AbstractConnector {
         try {
             soapEnvelope.addChild(populateSoapHeader(messageContext));
             soapEnvelope.addChild(populateBody(messageContext));
-            log.info(soapEnvelope);
             messageContext.setEnvelope(soapEnvelope);
         } catch (XMLStreamException e) {
             String msg = "Couldn't convert Element Body";
@@ -69,6 +70,13 @@ public class CreateAttachmentMediator extends AbstractConnector {
 
     }
 
+    /**
+     * Used to populate soap headers
+     * @param messageContext message context of request
+     * @return Soap Header
+     * @throws XMLStreamException
+     * @throws TransformerException
+     */
     private SOAPHeader populateSoapHeader(MessageContext messageContext) throws XMLStreamException,
             TransformerException {
         SOAPHeader soapHeader = soapFactory.createSOAPHeader();
@@ -79,7 +87,13 @@ public class CreateAttachmentMediator extends AbstractConnector {
         return soapHeader;
     }
 
-
+    /**
+     * Used to populate soap Body
+     * @param messageContext message context of request
+     * @return Soap Body
+     * @throws XMLStreamException
+     * @throws TransformerException
+     */
     private SOAPBody populateBody(MessageContext messageContext) throws XMLStreamException, TransformerException {
         SOAPBody soapBody = soapFactory.createSOAPBody();
         OMElement createAttachment = soapFactory.createOMElement(EWSConstants.CREATE_ATTACHMENT_ELEMENT, message);

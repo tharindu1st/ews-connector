@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -40,11 +40,13 @@ import javax.xml.transform.TransformerException;
 import static org.wso2.carbon.connector.EWSUtils.populateDirectElements;
 import static org.wso2.carbon.connector.EWSUtils.populateSaveItemFolderIdElement;
 
-
+/**
+ * used to generate CreateItem Soap Request
+ */
 public class CreateItemMediator extends AbstractConnector {
-    OMNamespace type = EWSUtils.type;
-    OMNamespace message = EWSUtils.message;
-    SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
+    private OMNamespace type = EWSUtils.type;
+    private OMNamespace message = EWSUtils.message;
+    private SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
 
     public void connect(MessageContext messageContext) throws ConnectException {
         SOAPEnvelope soapEnvelope = soapFactory.createSOAPEnvelope();
@@ -54,7 +56,6 @@ public class CreateItemMediator extends AbstractConnector {
         try {
             soapEnvelope.addChild(populateSoapHeader(messageContext));
             soapEnvelope.addChild(populateBody(messageContext));
-            log.info(soapEnvelope);
             messageContext.setEnvelope(soapEnvelope);
         } catch (XMLStreamException e) {
             String msg = "Couldn't convert Element Body";
@@ -72,6 +73,13 @@ public class CreateItemMediator extends AbstractConnector {
 
     }
 
+    /**
+     * Used to populate soap headers
+     * @param messageContext message context of request
+     * @return Soap Header
+     * @throws XMLStreamException
+     * @throws TransformerException throws when 
+     */
     private SOAPHeader populateSoapHeader(MessageContext messageContext) throws XMLStreamException,
             TransformerException {
         SOAPHeader soapHeader = soapFactory.createSOAPHeader();
@@ -82,7 +90,13 @@ public class CreateItemMediator extends AbstractConnector {
         return soapHeader;
     }
 
-
+    /**
+     * Used to populate soap body
+     * @param messageContext message context of request
+     * @return Soap Body
+     * @throws XMLStreamException
+     * @throws TransformerException
+     */
     private SOAPBody populateBody(MessageContext messageContext) throws XMLStreamException, TransformerException {
         SOAPBody soapBody = soapFactory.createSOAPBody();
         OMElement createItemElement = soapFactory.createOMElement(EWSConstants.CREATE_ITEM_ELEMENT, message);
@@ -105,6 +119,13 @@ public class CreateItemMediator extends AbstractConnector {
         return soapBody;
     }
 
+    /**
+     * used to populate message Element
+     * @param messageContext message context of request
+     * @param baseElement baseElement of element
+     * @throws XMLStreamException
+     * @throws TransformerException
+     */
     private void populateMessageElement(MessageContext messageContext, OMElement baseElement) throws
             XMLStreamException, TransformerException {
         populateDirectElements(messageContext, baseElement, EWSConstants.MIME_CONTENT);

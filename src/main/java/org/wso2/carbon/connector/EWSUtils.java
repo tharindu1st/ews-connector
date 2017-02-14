@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -37,6 +37,9 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayOutputStream;
 
+/**
+ * Utility functions for EWS Connector
+ */
 class EWSUtils {
     private static final String XSLT_FILE_LOCATION = "xslt/namespace.xslt";
     private static SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
@@ -48,10 +51,10 @@ class EWSUtils {
     /**
      * used to Create OmAttribute and set value
      *
-     * @param messageContext
-     * @param rootElement
-     * @param templateParameter
-     * @param attributeKey
+     * @param messageContext messageContext of Request
+     * @param rootElement rootElement to set Attribute
+     * @param templateParameter template parameter name
+     * @param attributeKey attribute name
      */
     static boolean setValueToXMLAttribute(MessageContext messageContext, OMElement rootElement, String
             templateParameter, String attributeKey) {
@@ -66,11 +69,11 @@ class EWSUtils {
     /**
      * Used to populate complex Elements with name spaces
      *
-     * @param messageContext
-     * @param baseElement
-     * @param parameterName
+     * @param messageContext messageContext of Request
+     * @param baseElement base Element to set element
+     * @param parameterName parameter name as config
      * @throws XMLStreamException
-     * @throws TransformerException
+     * @throws TransformerException when transformation failed
      */
     static void populateDirectElements(MessageContext messageContext, OMElement baseElement, String
             parameterName) throws XMLStreamException, TransformerException {
@@ -84,12 +87,12 @@ class EWSUtils {
     /**
      * Used to populate complex Elements with name spaces
      *
-     * @param messageContext
-     * @param baseElement
-     * @param parameterName
-     * @param rootNameSpace
+     * @param messageContext messageContext of Request
+     * @param baseElement base Element to set element
+     * @param parameterName parameter name as config
+     * @param rootNameSpace nameSpace for Root Element
      * @throws XMLStreamException
-     * @throws TransformerException
+     * @throws TransformerException when transformation get failed
      */
     static void populateDirectElements(MessageContext messageContext, OMElement baseElement, String
             parameterName, OMNamespace rootNameSpace) throws XMLStreamException, TransformerException {
@@ -105,10 +108,10 @@ class EWSUtils {
     /**
      * Used to populate <TimeZoneDefinition><TimeZoneDefinition/> element
      *
-     * @param messageContext
-     * @param timeZoneContextHeader
+     * @param messageContext messageContext of Request
+     * @param timeZoneContextHeader timezoneContext Header Omelement
      * @throws XMLStreamException
-     * @throws TransformerException
+     * @throws TransformerException when transformation get failed
      */
     private static void populateTimeZoneDefinitionHeader(MessageContext messageContext, OMElement
             timeZoneContextHeader) throws XMLStreamException, TransformerException {
@@ -141,8 +144,8 @@ class EWSUtils {
     /**
      * used to populate <ExchangeImpersonation><ExchangeImpersonation/> element
      *
-     * @param exchangeImpersonationSoapHeaderBlock
-     * @param messageContext
+     * @param exchangeImpersonationSoapHeaderBlock <ExchangeImpersonation> root Element
+     * @param messageContext messageContext of Request
      */
     private static void populateExchangeImpersonation(OMElement exchangeImpersonationSoapHeaderBlock,
                                                       MessageContext messageContext) {
@@ -162,12 +165,12 @@ class EWSUtils {
     /**
      * Used to set OmElement value from connector configuration
      *
-     * @param messageContext
-     * @param templateParameter
-     * @param baseElement
-     * @param elementName
+     * @param messageContext messageContext of Request
+     * @param templateParameter  template parameter name
+     * @param baseElement base Element to set element
+     * @param elementName element Name for create
      */
-    public static void setValueToXMLElement(MessageContext messageContext, String templateParameter, OMElement
+    static void setValueToXMLElement(MessageContext messageContext, String templateParameter, OMElement
             baseElement, String elementName) {
         OMElement rootElement = soapFactory.createOMElement(elementName, type);
         String value = (String) ConnectorUtils.lookupTemplateParamater(messageContext, templateParameter);
@@ -180,9 +183,9 @@ class EWSUtils {
     /**
      * Used to set OmElement value from connector configuration
      *
-     * @param messageContext
-     * @param templateParameter
-     * @param rootElement
+     * @param messageContext messageContext of Request
+     * @param templateParameter template parameter name
+     * @param rootElement rootElement to set Attribute
      */
     private static boolean setValueToXMLElement(MessageContext messageContext, OMElement rootElement, String
             templateParameter) {
@@ -197,9 +200,9 @@ class EWSUtils {
     /**
      * used to set namespace to Elements.
      *
-     * @param element
-     * @return
-     * @throws TransformerException
+     * @param element element to set nameSpaces
+     * @return return namespace set OmElement
+     * @throws TransformerException when transformation failed
      * @throws XMLStreamException
      */
     static OMElement setNameSpaceForElements(OMElement element) throws TransformerException, XMLStreamException {
@@ -217,10 +220,10 @@ class EWSUtils {
     /**
      * used to populate <ItemIds></ItemIds> element
      *
-     * @param messageContext
-     * @return
+     * @param messageContext messageContext of Request
+     * @return ItemIds OmElement
      * @throws XMLStreamException
-     * @throws TransformerException
+     * @throws TransformerException when transformation failed
      */
     static OMElement populateItemIds(MessageContext messageContext) throws XMLStreamException,
             TransformerException {
@@ -298,11 +301,11 @@ class EWSUtils {
     /**
      * used to populate <SavedItemFolderId></SavedItemFolderId> element
      *
-     * @param messageContext
-     * @param baseElement
-     * @return
+     * @param messageContext messageContext of Request
+     * @param baseElement base Element to set element
+     * @return true if element is available
      * @throws XMLStreamException
-     * @throws TransformerException
+     * @throws TransformerException when transformation failed
      */
     static boolean populateSaveItemFolderIdElement(MessageContext messageContext, OMElement baseElement) throws
             XMLStreamException, TransformerException {
@@ -348,19 +351,16 @@ class EWSUtils {
         if (addressListIdElement.getAllAttributes().hasNext()){
             baseElement.addChild(addressListIdElement);
         }
-        if (baseElement.getChildElements().hasNext()){
-            return true;
-        }
-        return false;
+        return baseElement.getChildElements().hasNext();
     }
 
     /**
      * used to populate <ItemShape></ItemShape> element
      *
-     * @param messageContext
-     * @return
+     * @param messageContext messageContext of Request
+     * @return ItemShape OmElement
      * @throws XMLStreamException
-     * @throws TransformerException
+     * @throws TransformerException when transformation failed
      */
     static OMElement populateItemShape(MessageContext messageContext) throws XMLStreamException,
             TransformerException {
@@ -396,9 +396,9 @@ class EWSUtils {
     /**
      * used to populate <ManagementRole></ManagementRole> element
      *
-     * @param soapHeader
-     * @param messageContext
-     * @throws TransformerException
+     * @param soapHeader soapHeader omElement
+     * @param messageContext messageContext of Request
+     * @throws TransformerException when transformation failed
      * @throws XMLStreamException
      */
     static void populateManagementRolesHeader(OMElement soapHeader, MessageContext messageContext) throws
@@ -414,8 +414,8 @@ class EWSUtils {
     /**
      * used to populate <DateTimePrecision></DateTimePrecision> element
      *
-     * @param soapHeader
-     * @param messageContext
+     * @param soapHeader soapHeader omElement
+     * @param messageContext messageContext of Request
      */
     static void populateDateTimePrecisionHeader(OMElement soapHeader, MessageContext messageContext) {
         OMElement dateTmePrecisionHeader = soapFactory.createOMElement(EWSConstants.DATE_TIME_PRECISION_HEADER, type);
@@ -430,9 +430,9 @@ class EWSUtils {
     /**
      * used to populate <TimeZoneContext></TimeZoneContext> element
      *
-     * @param soapHeader
-     * @param messageContext
-     * @throws TransformerException
+     * @param soapHeader soapHeader omElement
+     * @param messageContext messageContext of Request
+     * @throws TransformerException when transformation failed
      * @throws XMLStreamException
      */
     static void populateTimeZoneContextHeader(OMElement soapHeader, MessageContext messageContext) throws
@@ -447,9 +447,9 @@ class EWSUtils {
     /**
      * used to populate <RequestServerVersion></RequestServerVersion> element
      *
-     * @param soapHeader
-     * @param messageContext
-     * @throws TransformerException
+     * @param soapHeader soapHeader omElement
+     * @param messageContext messageContext of Request
+     * @throws TransformerException when transformation failed
      * @throws XMLStreamException
      */
     static void populateRequestedServerVersionHeader(OMElement soapHeader, MessageContext messageContext) throws
@@ -465,8 +465,8 @@ class EWSUtils {
     /**
      * used to populate <MailBoxCulture></MailBoxCulture> element
      *
-     * @param soapHeader
-     * @param messageContext
+     * @param soapHeader soapHeader omElement
+     * @param messageContext messageContext of Request
      */
     static void populateMailboxCulture(OMElement soapHeader, MessageContext messageContext) {
         OMElement mailBoxCultureHeader = soapFactory.createOMElement(EWSConstants.MAIL_BOX_CULTURE_HEADER, type);
@@ -478,8 +478,8 @@ class EWSUtils {
     /**
      * used to populate <ExchangeImpersonationHeader></ExchangeImpersonationHeader> element
      *
-     * @param soapHeader
-     * @param messageContext
+     * @param soapHeader soapHeader omElement
+     * @param messageContext messageContext of Request
      */
     static void populateExchangeImpersonationHeader(OMElement soapHeader, MessageContext messageContext) {
         OMElement exchangeImpersonationSoapHeaderBlock = soapFactory.createOMElement(EWSConstants

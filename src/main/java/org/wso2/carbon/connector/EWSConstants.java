@@ -1,5 +1,8 @@
 package org.wso2.carbon.connector;
 
+/**
+ * Constant class for EWS
+ */
 public class EWSConstants {
     public static final String TYPE_NAME_SPACE = "http://schemas.microsoft.com/exchange/services/2006/types";
     public static final String MESSAGES_NAME_SPACE = "http://schemas.microsoft.com/exchange/services/2006/messages";
